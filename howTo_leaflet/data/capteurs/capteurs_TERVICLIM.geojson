@@ -1,0 +1,18 @@
+var capteurs_TERVICLIM = {
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+
+"features": [
+{ "type": "Feature", "properties": { "ele": 159.0, "name": "CAP1", "cmt": "CAP1", "desc": "CAP1", "station": "data_beart", "TempÃ©ra": 10.0, "TempAnnual": 19.0, "acidité": 4.0, "Degre2012": 14.0 }, "geometry": { "type": "Point", "coordinates": [ 3.056283333, 42.504233332999895 ] } },
+{ "type": "Feature", "properties": { "ele": 127.0, "name": "CAP2", "cmt": "CAP2", "desc": "CAP2", "station": "data_le_rimbau", "TempÃ©ra": 9.0, "TempAnnual": 18.0, "acidité": 5.0, "Degre2012": 13.0 }, "geometry": { "type": "Point", "coordinates": [ 3.07525, 42.509833332999889 ] } },
+{ "type": "Feature", "properties": { "ele": 54.0, "name": "CAP3", "cmt": "CAP3", "desc": "CAP3", "station": "data_col_de_mollo", "TempÃ©ra": 9.0, "TempAnnual": 19.0, "acidité": 4.0, "Degre2012": 14.0 }, "geometry": { "type": "Point", "coordinates": [ 3.120516667, 42.518433332999869 ] } },
+{ "type": "Feature", "properties": { "ele": 87.0, "name": "CAP4", "cmt": "CAP4", "desc": "CAP4", "station": "data_cosprons", "TempÃ©ra": 10.0, "TempAnnual": 19.0, "acidité": 3.0, "Degre2012": 13.0 }, "geometry": { "type": "Point", "coordinates": [ 3.1055, 42.500199999999886 ] } },
+{ "type": "Feature", "properties": { "ele": 116.0, "name": "CAP5", "cmt": "CAP5", "desc": "CAP5", "station": "data_peyrefite", "TempÃ©ra": 10.0, "TempAnnual": 19.0, "acidité": 3.0, "Degre2012": 14.0 }, "geometry": { "type": "Point", "coordinates": [ 3.147466667, 42.461199999999884 ] } },
+{ "type": "Feature", "properties": { "ele": 110.0, "name": "CAP6", "cmt": "CAP6", "desc": "CAP6", "station": "data_casa_cermada", "TempÃ©ra": 10.0, "TempAnnual": 19.0, "acidité": 4.0, "Degre2012": 12.0 }, "geometry": { "type": "Point", "coordinates": [ 3.144383333, 42.444483332999873 ] } },
+{ "type": "Feature", "properties": { "ele": 259.0, "name": "CAP8", "cmt": "CAP8", "desc": "CAP8", "station": "data_galline", "TempÃ©ra": 9.0, "TempAnnual": 18.0, "acidité": 9.0, "Degre2012": 9.0 }, "geometry": { "type": "Point", "coordinates": [ 3.091033333, 42.493116666999889 ] } },
+{ "type": "Feature", "properties": { "ele": 114.0, "name": "CAP9", "cmt": "VIGNE-EXP", "desc": "VIGNE-EXP", "station": "data_vigne_expe", "TempÃ©ra": 10.8166, "TempAnnual": 19.563, "acidité": null, "Degre2012": null }, "geometry": { "type": "Point", "coordinates": [ 3.1049, 42.481099999999877 ] } },
+{ "type": "Feature", "properties": { "ele": 139.0, "name": "CAP10", "cmt": "CAP10", "desc": "CAP10", "station": "data_ile", "TempÃ©ra": 10.0, "TempAnnual": 19.0, "acidité": 4.0, "Degre2012": 15.0 }, "geometry": { "type": "Point", "coordinates": [ 3.08825, 42.466099999999884 ] } },
+{ "type": "Feature", "properties": { "ele": 192.0, "name": "CAP11", "cmt": "CAP11", "desc": "CAP11", "station": "data_coubaret_mas_cornet", "TempÃ©ra": 10.0, "TempAnnual": 19.0, "acidité": 4.0, "Degre2012": 14.0 }, "geometry": { "type": "Point", "coordinates": [ 3.061333333, 42.452166666999887 ] } },
+{ "type": "Feature", "properties": { "ele": 157.0, "name": "CAP12", "cmt": "CAP12", "desc": "CAP12", "station": "data_escoumes", "TempÃ©ra": 10.0, "TempAnnual": 19.0, "acidité": 3.0, "Degre2012": 15.0 }, "geometry": { "type": "Point", "coordinates": [ 3.116116667, 42.457249999999888 ] } }
+]
+}
