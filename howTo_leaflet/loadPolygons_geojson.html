@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- tuto suivit : digital geography : http://goo.gl/Vqg0kn  -->
+  <title>sandbox leaflet</title>
+  <meta charset="utf-8" />
+  <!-- chagement des librairies depuis le site leaflet et d3.js-->
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <!-- Pour charger des données externet type geojson -->
+  <script src="data/municipale_limoges/resultats_municipale_2014.geojson" type="text/javascript"></script>
+  <style>
+  /*import css from leaflet, permet d'avoir les icones et
+  les outils de leaflet*/
+  @import url(http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.css);
+  .info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+  }
+  .info h4 {
+    margin: 0 0 5px;
+    color: #777;
+  }
+  .legend {
+      line-height: 18px;
+      color: #555;
+  }
+  .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+  }
+
+  </style>
+</head>
+<body>
+  <h1 align = "center">load polygons</h1>
+  <h2 align = "center">Election municipale 2014</h2>
+  <div id="map" style="width: 100%; height: 550px"></div>
+  <script>
+    // Centre la carte sur les coordoné [] et avec un niveau de zoom
+    var map = L.map('map').setView([45.8539,1.2427], 12);
+    // chargement d'un WMS OSM depuis toolserver avec le theme noir et blanc
+    var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
+    // chargement d'un autre WMS
+    var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'Add some attributes here!'}).addTo(map);
+    var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};L.control.layers(baseLayers);
+    // ajout un controleur de couche avec les deux types de serveur WMS
+    L.control.layers(baseLayers).addTo(map);
+
+    function getColor(d) {
+    return d > 40  ? '#f03b20' :
+           d > 35  ? '#fd8d3c' :
+           d > 30  ? '#feb24c' :
+           d > 26  ? '#fed976' :
+           d > 20  ? '#ffffb2' :
+                      '#fee5d9';
+                    }
+    function style(feature) {
+        return {
+            fillColor: getColor(feature.properties.pc_RODET),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+        };
+    }
+
+    // chargement d'une couche en geojson
+     /* capteurs TERVICIM les données sont chargé dans le geader */
+        var bv = new L.LayerGroup(); //si qu'une seul couche c'est pas necessaire
+        // le fichier geojson creer avec Qgis en epsg 4326 est
+        // légérement modifier pour déclarer la variable capteurs_TERVICLIM
+        var l_bv = L.geoJson(bureau_vote,{
+                    style: style,
+                    onEachFeature : onEachFeature
+                    // onEachFeature: function (feature, layer) {
+                    //     // On va naviger dans l'arbre geojson pour
+                    //     // aller chercher l'atribut name avec cette fonction
+                    //     // On ajouter avec '+' les elements et le html
+                    //     layer.bindPopup('<b>proportion vote Rodet </b>'+feature.properties.pc_RODET);
+                    // }
+
+                  }
+                ).addTo(bv);
+
+        bv.addTo(map);
+
+        // Ajouter des interactions
+        function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+            if (!L.Browser.ie && !L.Browser.opera) {
+                layer.bringToFront();
+            }
+            info.update(layer.feature.properties);
+        }
+
+        function resetHighlight(e) {
+            l_bv.resetStyle(e.target);
+            info.update();
+        }
+
+        function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: zoomToFeature
+            });
+        }
+
+        // On ajouter un panel custome qui vient ajouter de l'interaction différente d'un popup
+        var info = L.control();
+
+        info.onAdd = function (map) {
+          this._div = L.DomUtil.create('div', 'info');
+          this.update();
+          return this._div;
+        };
+
+        // l'atribut props permet d'acceder aux données chargé
+        // c'est lui qui est passé à la fonction
+        info.update = function (props) {
+            this._div.innerHTML = '<h4>Resultat pour le bureau</h4>' +  (props ?
+            'pct rodet '+ props.pc_RODET : 'survolez un bureau de vote') ;
+        };
+
+        info.addTo(map);
+
+        // creation d'une legende !
+        var legend = L.control({position: 'bottomright'});
+
+        legend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [20, 26, 30, 35, 40],
+                labels = [];
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+
+            return div;
+        };
+
+        legend.addTo(map);
+
+  </script>
+ </body>
+</html>
