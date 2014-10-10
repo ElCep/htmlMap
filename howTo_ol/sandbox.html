@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- tuto suivit : digital geography : http://goo.gl/Vqg0kn  -->
+  <title>sandbox</title>
+  <meta charset="utf-8" />
+  <!-- chagement des librairies depuis le site ol3-->
+  <!-- Le CSS -->
+  <link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">
+  <!-- La librairie ol3 -->
+  <script src="http://openlayers.org/en/v3.0.0/build/ol.js" type="text/javascript"></script>
+  <style>
+
+  </style>
+</head>
+<body>
+  <h1 align = "center">sandbox OL3</h1>
+  <div id="map" style="width: 100%; height: 450px"></div>
+  <script>
+  var layers = [
+    //fond de carte basé sur OSM et proposer par maps.stamen
+    new ol.layer.Tile({
+        source: new ol.source.Stamen({
+          layer: 'toner'
+        })
+      }),
+    //flux WMS strimer par mapServer
+    new ol.layer.Tile({
+      // extent: [3.0288811, 42.4222348, 3.1844421, 42.5407422],
+      title:"acidity-regression",
+      source: new ol.source.TileWMS({
+        url: 'http://localhost/cgi-bin/mapserv?map=/var/www/html/mapfiles/cadastre/banyuls3857.map',
+        params: {LAYERS: 'acidity-2012',VERSION: '1.3.0'},
+        serverType: 'mapserver'
+        })
+      })
+    ];
+
+  var vectorLayer = new ol.layer.Vector({
+  source: new ol.source.GeoJSON({
+    projection: 'EPSG:3857',
+    url: '../howTo_leaflet/data/capteurs/capteurs_TERVICLIM.geojson'
+  }),
+  // style: function(feature, resolution) {
+  //   var text = resolution < 5000 ? feature.get('name') : '';
+  //   if (!styleCache[text]) {
+  //     styleCache[text] = [new ol.style.Style({
+  //       fill: new ol.style.Fill({
+  //         color: 'rgba(255, 255, 255, 0.6)'
+  //       }),
+  //       stroke: new ol.style.Stroke({
+  //         color: '#319FD3',
+  //         width: 1
+  //       }),
+  //       text: new ol.style.Text({
+  //         font: '12px Calibri,sans-serif',
+  //         text: text,
+  //         fill: new ol.style.Fill({
+  //           color: '#000'
+  //         }),
+  //         stroke: new ol.style.Stroke({
+  //           color: '#fff',
+  //           width: 3
+  //         })
+  //       })
+  //     })];
+  //   }
+  //   return styleCache[text];
+  // }
+});
+  // objet de visualisation
+  var map = new ol.Map({
+    layers: layers,
+    target: 'map',
+    view: new ol.View({
+      projection: 'EPSG:3857',
+      center: [344540,5233429],
+      zoom: 12
+    })
+  });
+
+  </script>
+ </body>
+</html>
