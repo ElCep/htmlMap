@@ -23,6 +23,7 @@ sur les données des municipales de Limoges pour le candidat PS.
 * la page [Quick Start de leaflet.js](http://leafletjs.com/examples/quick-start.html)
 * une [doc](https://leanpub.com/leaflet-tips-and-tricks/read) très bien faite avec des exemples
 * un outils en ligne pour avoir des couleurs chouette : [colorBrewer2](http://colorbrewer2.org/)
+* les [bases de mapServer](http://learnosm.org/fr/advanced/wms-service-configuration/) sur le site learnOSM
 
 ### pour aller plus loin ###
 
