@@ -13,14 +13,14 @@ des p'tites modification sont à apporter à apache
 
 `nano /etc/httpd/conf/httpd.conf`
 
-`<Directory "/var/www/cgi-bin">
-        SetHandler fcgid-script
-        Options +ExecCGI
+	<Directory "/var/www/cgi-bin">
+		SetHandler fcgid-script
+		Options +ExecCGI
 
-        # Customize the next two directives for your requirements.
-        Order allow,deny
-        Allow from all
-</Directory>`
+		# Customize the next two directives for your requirements.
+		Order allow,deny
+		Allow from all
+	</Directory>
 
 
 ### Le mapfile ###
