@@ -1,0 +1,88 @@
+MAP
+  FONTSET "/usr/share/fonts/liberation/LiberationMono-Italic.ttf"
+  EXTENT 337173.499 5224441.010 354490.297 5242327.350
+  IMAGETYPE "png"
+  NAME "cadastre_banyuls"
+  SHAPEPATH "data/"
+  SIZE 600 600
+  STATUS ON
+  UNITS METERS
+
+  OUTPUTFORMAT
+    NAME "png"
+    MIMETYPE "image/png"
+    DRIVER "AGG/PNG"
+    EXTENSION "png"
+    IMAGEMODE RGB
+    TRANSPARENT TRUE
+  END # OUTPUTFORMAT
+
+   PROJECTION
+     "+init=epsg:3857"
+   END # PROJECTION
+
+   WEB
+     IMAGEPATH "/tmp/"
+#     TEMPPATH "/var/www/html/tmp/"
+     IMAGEURL "http://localhost/html/tmp/"
+     METADATA
+       "wms_onlineresource"	"http://localhost/cgi-bin/mapserv?map=/var/www/html/mapfiles/cadastre/banyuls3857.map"
+       "ows_enable_request"	"*"
+       "wms_srs"	"EPSG:3857"
+       "wms_title"	"banyuls"
+     END # METADATA
+   END # WEB
+  
+  LAYER
+    NAME "acidity-2012"
+    DATA "terviclim/Acidite2012_3857.tiff"
+    TYPE RASTER
+    STATUS ON
+    METADATA
+      "wms_title" "acidity" ##required
+      "wms_srs"    "EPSG:3857"
+      "wms_extent" "337173.499 5224441.010 354490.297 5242327.350"
+    END
+    PROJECTION
+      "init=epsg:3857" ##recommended
+    END
+    TRANSPARENCY 50
+    CLASS
+      NAME "1"
+      EXPRESSION ([pixel] > 0.942 and [pixel] <=5.24)
+      STYLE
+	COLOR 4 188 255
+      END
+    END
+    CLASS
+      NAME "2"
+      EXPRESSION ([pixel] > 5.24 and [pixel] <=9.55)
+      STYLE
+	COLOR 171 221 164
+      END
+    END
+    CLASS
+      NAME "3"
+      EXPRESSION ([pixel] > 9.55 and [pixel] <= 13.86)
+      STYLE
+	COLOR 255 255 191
+      END
+    END
+    CLASS
+      NAME "4"
+      EXPRESSION ([pixel] > 13.86 and [pixel] <= 18.16)
+      STYLE
+	COLOR 253 174 97
+      END
+    END
+    CLASS
+      NAME "5"
+      EXPRESSION ([pixel] > 18.16)
+      STYLE
+	COLOR 215 25 28
+      END
+    END
+    
+  END #LAYER
+
+END # MAP

@@ -8,8 +8,14 @@ htmlMap
 
 ## le contenu des dossiers ##
 
+### mapfile ###
+
+* le [readme](mapfile/README.md)
+* un [exemple](mapfile/banyuls3857.map) de mapfile sur un couche raster 
+
 ### Le dossier leaflet ###
-* le [readme](howTo_leaflet/readme.md)
+
+* le [readme](howTo_leaflet/README.md)
 * _[event_map.html](howTo_leaflet/event_map.html)_ Une carte qui affiche des popup
 avec la latitude et la longitude
 * _[loadPoints_geojson.html](howTo_leaflet/loadPoints_geojson.html)_ charge un geojson
@@ -19,7 +25,8 @@ polygones et réalise un choroplèthe sur la ville de Limoges
 * _[sandbox.html](howTo_leaflet/sandbox.html)_ le trux pour faire des essais
 
 ### Le dossier OpenLayer ###
-* le [readme](howTo_ol/readme.md)
+
+* le [readme](howTo_ol/README.md)
 * _[loadmapfile.html](howTo_ol/loadmapfile.html)_ openLayer permet de charger des données ne sont pas tuillé
 au contraire de leaflet (il faut passer par un hack)
 * _[sandbox.html](howTo_ol/sandbox.html)_ un truc bien crado
