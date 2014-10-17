@@ -17,6 +17,7 @@
   <h1 align = "center">sandbox OL3</h1>
   <div id="map" style="width: 100%; height: 450px"></div>
   <script>
+  
   var layers = [
     //fond de carte basé sur OSM et proposer par maps.stamen
     new ol.layer.Tile({
@@ -39,7 +40,7 @@
   var vectorLayer = new ol.layer.Vector({
   source: new ol.source.GeoJSON({
     projection: 'EPSG:3857',
-    url: '../howTo_leaflet/data/capteurs/capteurs_TERVICLIM.geojson'
+    url: '../howTo_ol/data/capteurs_TERVICLIM_3857.geojson'
   }),
   // style: function(feature, resolution) {
   //   var text = resolution < 5000 ? feature.get('name') : '';
