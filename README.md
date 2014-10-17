@@ -9,5 +9,17 @@ htmlMap
 ## le contenu des dossiers ##
 
 ### Le dossier leaflet ###
+* le [readme](howTo_leaflet/readme.md)
+* _[event_map.html](howTo_leaflet/event_map.html)_ Une carte qui affiche des popup
+avec la latitude et la longitude
+* _[loadPoints_geojson.html](howTo_leaflet/loadPoints_geojson.html)_ charge un geojson
+et propose des points avec des popup sur banyuls
+* _[loadPolygons_geojson.html](howTo_leaflet/loadPolygons_geojson.html)_ charge des
+polygones et réalise un choroplèthe sur la ville de Limoges
+* _[sandbox.html](howTo_leaflet/sandbox.html)_ le trux pour faire des essais
 
-* [event_map.html](howTo_leaflet/event_map.html) 
+### Le dossier OpenLayer ###
+* le [readme](howTo_ol/readme.md)
+* _[loadmapfile.html](howTo_ol/loadmapfile.html)_ openLayer permet de charger des données ne sont pas tuillé
+au contraire de leaflet (il faut passer par un hack)
+* _[sandbox.html](howTo_ol/sandbox.html)_ un truc bien crado
