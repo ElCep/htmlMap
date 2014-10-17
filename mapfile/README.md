@@ -49,3 +49,25 @@ Et le renomer en mapserv
 
         sudo cp /usr/libexec/mapserver /var/www/cgi-bin/
         sudo mv /var/www/cgi-bin/mapserver /var/www/cgi-bin/mapserv
+
+##  la configuration de CGI ##
+des p'tites modification sont à apporter à apache
+
+`nano /etc/httpd/conf/httpd.conf`
+
+  <Directory "/var/www/cgi-bin">
+    SetHandler fcgid-script
+    Options +ExecCGI
+
+    # Customize the next two directives for your requirements.
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+
+## Le mapfile ##
+
+## Test Mapserver ##
+Dans un browser :
+
+http://localhost/cgi-bin/mapserv?map=/var/www/html/mapfiles/cadastre/banyuls4326.map&version=1.1.0&layer=acidity-2012&requet=GetMap&template=openLayers
