@@ -35,7 +35,7 @@ Vous pouvez ensuite utiliser le packages proposer par la distribution  :
 
 Mais vous pouvez aussi le complier depuis les [sources](http://mapserver.org/fr/download.html).
 
-## utilisation ##
+### utilisation ###
 
 Si vous avez installé le package de la distribution [vous trouverez mapserver là](http://lists.osgeo.org/pipermail/mapserver-users/2014-July/076712.html) :
 
@@ -50,7 +50,7 @@ Et le renomer en mapserv
         sudo cp /usr/libexec/mapserver /var/www/cgi-bin/
         sudo mv /var/www/cgi-bin/mapserver /var/www/cgi-bin/mapserv
 
-##  la configuration de CGI ##
+###  la configuration de CGI ###
 des p'tites modification sont à apporter à apache
 
 `nano /etc/httpd/conf/httpd.conf`
@@ -64,6 +64,71 @@ des p'tites modification sont à apporter à apache
     Allow from all
   </Directory>
 
+## Sous debian ##
+
+Il est possible d'installer Mapserver sur debian depuis les packages de la distribution,
+mais aussi de compiler le programme [depuis les sources](http://mapserver.org/fr/installation/unix.html)
+C'est ce que nous proposons ici.
+
+### compilation depuis les sources ###
+En nous raportant à la [page dediée](http://mapserver.org/fr/installation/unix.html#compiling),
+ nous constatons qu'il y a quelques dépendences à satisfaire pour pouvoir compiler mapserver.
+
+        #verifier les MAJ
+        apt-get update && apt-get upgrade
+        #installer un serveur web et cgi
+        apt-get install apache2 libfcgi-dev php5-cgi
+        #ajouter cgi a apache2
+        a2enmod cgi
+        #dependences de developpement
+        apt-get install gcc gpp g++ libc-dev make automake autoconf flex bison perl libreadline5 libreadline-gplv2-dev
+        #dependences mapserver
+        apt-get install libjpeg8 libjpeg-dev libjpeg-dev libpng12-0 libpng12-dev libfreetype6 libfreetype6-dev proj-bin libcurl4-gnutls-dev fontconfig libtiff4 libtiff4-dev libxpm4 libcairo2-dev libgd-tools
+        #install de geos
+        apt-get install libgeos-c1 libgeos-dev
+        #install proj4
+        apt-get install libproj0 libproj-dev
+        #install geotiff
+        apt-get install geotiff-bin
+        #install gdal
+        apt-get install gdal-bin libgdal-dev
+        #install postgreSQL (9.1) et postGIS (1.5)
+        apt-get install postgresql postgis
+
+On peut ensuite télécharger les sources :
+
+        wget
+
+### installation depuis le repo ###
+
+Si les dernières avancer de mapserver ne sont pas cruciale, on peut se contenter des
+binaire dans les dépots
+
+        apt-get install mapserver-bin cgi-mapserver
+
+### Configurer cgi ###
+
+En suivant la [routine proposé par debian](https://wiki.debian.org/fr/Lamp)
+ pour l'installation d'apache j'ai créé un dossier /home/flsh/public_html qui
+ contiendra les sites et un dossier cgi-bin
+
+Il faut donc réorienter la configuration d'apache pour cgi 
+
+        nano /etc/apache2/sites-available/default
+
+et intégré quelque chose comme ça en remplacant user par l'utilisateur.
+
+        ScriptAlias /cgi-bin/ /home/user/public_html/cgi-bin/
+        <Directory "/home/flsh/public_html/cgi-bin/">
+                AllowOverride None
+                Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+                Order allow,deny
+                Allow from all
+        </Directory>
+
+POur tester que cela fonctionne :
+
+        http://myDomain.fr/cgi-bin/mapserv
 
 ## Le mapfile ##
 
