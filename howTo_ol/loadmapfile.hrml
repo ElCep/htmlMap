@@ -17,6 +17,7 @@
   <h1 align = "center">sandbox OL3</h1>
   <div id="map" style="width: 100%; height: 450px"></div>
   <script>
+
   var layers = [
     //fond de carte basé sur OSM et proposer par maps.stamen
     new ol.layer.Tile({
@@ -26,7 +27,6 @@
       }),
     //flux WMS strimer par mapServer
     new ol.layer.Tile({
-      // extent: [3.0288811, 42.4222348, 3.1844421, 42.5407422],
       title:"acidity-regression",
       source: new ol.source.TileWMS({
         url: 'http://localhost/cgi-bin/mapserv?map=/var/www/html/mapfiles/cadastre/banyuls3857.map',
@@ -35,8 +35,13 @@
         })
       })
     ];
-  });
-  
+
+  var vectorLayer = new ol.layer.Vector({
+  source: new ol.source.GeoJSON({
+    projection: 'EPSG:3857',
+    url: '../howTo_ol/data/capteurs_TERVICLIM_3857.geojson'
+  }),
+});
   // objet de visualisation
   var map = new ol.Map({
     layers: layers,
