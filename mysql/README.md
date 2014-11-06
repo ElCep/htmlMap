@@ -6,9 +6,9 @@ Pour donner l'accès depuis l'exterieur via une IP
         # mysql -u root -p
         mysql> GRANT ALL ON fooDatabase.* TO fooUser@'1.2.3.4' IDENTIFIED BY 'my_password';
 
-POur tester l'accès a distance :
+POur tester l'accès a distance via mySQl:
 
-        mysql> GRANT ALL ON fooDatabase.* TO fooUser@'1.2.3.4' IDENTIFIED BY 'my_password';
+        # mysql -u fooUser -p -h 44.55.66.77
 
 source : [(http://www.rackspace.com/knowledge_center/article/mysql-connect-to-your-database-remotely)]
 
@@ -16,8 +16,41 @@ source : [(http://www.rackspace.com/knowledge_center/article/mysql-connect-to-yo
 
 Depuis sa version 4 mySql suporte quelques fonctions spatiales.
 
+### Si vous avez dejà une tables spatiale ###
 
-### creer une geom a partir d'un WKT###
+On peut utiliser gdal/ogr pour tester les connections au serveur 
+
+        #ogrinfo MYSQL:tests,host=164.81.15.10,port=3306,user=Foouser,password=p4ssw0rD
+
+Si tout fonctionne on doit obtenir 
+
+        INFO: Open of `MYSQL:tests,host=164.81.15.10,port=3306,user=remotuser,password=0rl34n5'
+        using driver `MySQL' successful.
+        1: blablbla (None)
+        2: villes
+        3: villes2
+
+On peut ensuite optenir des infos utilise à la configuration du mapFile avec 
+
+        #ogrinfo MYSQL:tests,host=164.81.15.10,port=3306,user=Foouser,password=p4ssw0rD villes -summary
+
+Qui renvois :
+
+        INFO: Open of `MYSQL:tests,host=164.81.15.10,port=3306,user=remotuser,password=0rl34n5'
+        using driver `MySQL' successful.
+        
+        Layer name: villes
+        Geometry: Unknown (any)
+        Feature Count: 747
+        Extent: (0.689483, 44.929308) - (2.562495, 46.421369)
+        Layer SRS WKT:
+        (unknown)
+        FID Column = id
+        Geometry Column = geom
+        wkt_geom: String (47.0)
+
+
+### Table spatiale : creer une geom a partir d'un WKT###
 MySQL peut embarquer des données spatiales. Imaginons que nos données sont dans
 une base tests, et que la table qui nous intéresse s'appelle villes2.
 
@@ -26,3 +59,4 @@ une base tests, et que la table qui nous intéresse s'appelle villes2.
 
 ## Sources ##
 * [importer des données depuis Qgis](http://dogeo.fr/index.php/web-carto/17-importer-une-couche-spatiale-dans-mysql)
+* [connection mySql et mapServer](http://mapserver.org/fr/input/vector/mysql.html#mysql)
