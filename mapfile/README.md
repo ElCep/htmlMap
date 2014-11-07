@@ -70,9 +70,17 @@ Il est possible d'installer Mapserver sur debian depuis les packages de la distr
 mais aussi de compiler le programme [depuis les sources](http://mapserver.org/fr/installation/unix.html)
 C'est ce que nous proposons ici.
 
-### compilation depuis les sources ###
-En nous raportant à la [page dediée](http://mapserver.org/fr/installation/unix.html#compiling),
- nous constatons qu'il y a quelques dépendences à satisfaire pour pouvoir compiler mapserver.
+
+### installation depuis le repo ###
+
+Si les dernières avancer de mapserver ne sont pas cruciale, on peut se contenter des
+binaire dans les dépots. En l'occurance, le binaire dans les dépôts n'est pas fonctionnelle!
+
+        apt-get install mapserver-bin cgi-mapserver
+
+### Complilation depuis les sources ###
+
+On aura besoin de quelques lib
 
         #verifier les MAJ
         apt-get update && apt-get upgrade
@@ -92,39 +100,119 @@ En nous raportant à la [page dediée](http://mapserver.org/fr/installation/unix
         apt-get install geotiff-bin
         #install gdal
         apt-get install gdal-bin libgdal-dev
-        #install postgreSQL (9.1) et postGIS (1.5)
-        apt-get install postgresql postgis
 
-On peut ensuite télécharger les sources :
+#### Installer posgresql ####
 
-        wget
+Il faut ajouter un depot a debian, on trouvera [les infos là](http://www.postgresql.org/download/linux/debian/) : 
 
-### installation depuis le repo ###
+        nano /etc/apt/sources.list.d/pgdg.list
 
-Si les dernières avancer de mapserver ne sont pas cruciale, on peut se contenter des
-binaire dans les dépots
+Ce qui ouvre un fichier dans lequel on copie l'adresse du depot
 
-        apt-get install mapserver-bin cgi-mapserver
+        deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main
+
+On importe la clef public du depot et prépare les MAJ
+
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+        apt-get update
+
+On peut maintenant installer postgresql et postgis
+
+        apt-get install postgresql-9.3 postgresql-contrib-9.3 postgis
+        
+*Configuration du serveur de base de données*
+On doit permettre aux IP du reseau de se connecter :
+
+        nano /etc/postgresql/9.3/main/pg_hba.conf
+        
+On ajoute une ligne à la configue : 
+
+        # TYPE  DATABASE        USER            ADDRESS                 METHOD
+          host    all             all          164.81.168.0/24            md5
+          
+Ce qui devrait permettre à toutes les IP 164.81.168.X de se connecter.
+
+Il faut ensuite modifier `/etc/postgresql/9.3/main/postgresql.conf` pour permettre à postgreSQL d'écouter tout les réseau : 
+
+        listen_addresses='*'
+
+Enfin, pour que les modifications soit prisent en compte :
+
+        service postgresql restart
+        
+#### Configurer postgreSQL et postGIS ####
+
+La marche a suivre est [disponible sur e trac de l'OSGeo](http://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS21UbuntuPGSQL93Apt) : 
+
+
+
+#### Compiler mapServer ####
+
+On aura besoin d'un minimum d'outils de construction
+
+        apt-get install build-essential
+
+Il faut télécharger les sources de mapserver qui sont disponible sur [cette page](download.osgeo.org/mapserver/mapserver-6.4.1.tar.gz)
+
+        wget download.osgeo.org/mapserver/mapserver-6.4.1.tar.gz
+
+On procède ensuite à l'installation 
+
+        tar -xvzf mapserver-6.4.1.tar.gz #décompression
+        cd mapserver-6.4.1  
+        mkdir build                      #creation d'un dossier build
+        cd build/
+
+Une fois les petits préparatifs effectué, il faut configurer l'environnement
+
+        cmake -DCMAKE_INSTALL_PREFIX=/opt \
+        -DCMAKE_PREFIX_PATH=/etc/postgresql/9.3:/etc/python2.7:/usr/bin:/usr/include:/opt \
+        -DWITH_FRIBIDI=0 \
+        -DWITH_CLIENT_WFS=ON \
+        -DWITH_CLIENT_WMS=ON \
+        -DWITH_CURL=ON \
+        -DWITH_SOS=ON \
+        -DWITH_PHP=OFF \
+        -DWITH_PYTHON=OFF \
+        -DWITH_MSSQL2008=OFF .. >../configure.out.txt
+
+Ce qui permet de produire le makefile il ne reste plus qu'a compiler et installer 
+
+        make
+        make install
+
+On peut creer un fichier `cgi-bin` dans `/var/www/` 
+
+        mkdir /var/www/cgi-bin
+
+avec un petit `find / -name mapserv` vous optenez :
+
+        /opt/bin/mapserv
+
+
+Il faut alors copier le binaire `/opt/bin/mapserv` dans `/var/www/cgi-bin/`
+
+        cp /opt/bin/mapserv /var/www/cgi-bin/
 
 ### Configurer cgi ###
 
-En suivant la [routine proposé par debian](https://wiki.debian.org/fr/Lamp)
- pour l'installation d'apache j'ai créé un dossier /home/flsh/public_html qui
- contiendra les sites et un dossier cgi-bin
-
-Il faut donc réorienter la configuration d'apache pour cgi 
+Il faut réorienter la configuration d'apache pour cgi 
 
         nano /etc/apache2/sites-available/default
 
 et intégré quelque chose comme ça en remplacant user par l'utilisateur.
 
-        ScriptAlias /cgi-bin/ /home/user/public_html/cgi-bin/
-        <Directory "/home/flsh/public_html/cgi-bin/">
+        ScriptAlias /cgi-bin/ /var/www/cgi-bin/
+        <Directory "/var/www/cgi-bin/">
                 AllowOverride None
                 Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
                 Order allow,deny
                 Allow from all
         </Directory>
+
+Puis passer les site available en enable 
+
+        a2ensite
 
 POur tester que cela fonctionne :
 
