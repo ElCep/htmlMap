@@ -236,7 +236,11 @@ Ce qui à pour effet de produir une carte avec un template ol
 Dans le même esprit on peut tester un flux *WFS* sur la base de
 
           http://164.81.15.10/cgi-bin/mapserv?map=/var/www/ms_monsatR/monastR_wfs.map&SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities
-ce qui à pour effet de produire un flux XML
+ce qui à pour effet de produire un flux XML décrivant les données ! Pour cette fois récupérer
+les données (toujours sous forme d'un flux XML)
+
+        http://164.81.15.10/cgi-bin/mapserv?map=/var/www/ms_monsatR/monastR_wfs.map&SERVICE=WFS&VERSION=1.0.0&REQUEST=getfeature&TYPENAME=monsatR_mySQL
+
 
 
 ### Dans [Qgis](http://www.qgis.org/fr/site/) ###
