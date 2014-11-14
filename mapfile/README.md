@@ -64,7 +64,7 @@ des p'tites modification sont à apporter à apache
     Allow from all
   </Directory>
 
-## Sous debian ##
+## Sous [Debian](https://www.debian.org/index.fr.html) ##
 
 Il est possible d'installer Mapserver sur debian depuis les packages de la distribution,
 mais aussi de compiler le programme [depuis les sources](http://mapserver.org/fr/installation/unix.html)
@@ -103,7 +103,7 @@ On aura besoin de quelques lib
 
 #### Installer posgresql ####
 
-Il faut ajouter un depot a debian, on trouvera [les infos là](http://www.postgresql.org/download/linux/debian/) : 
+Il faut ajouter un depot a debian, on trouvera [les infos là](http://www.postgresql.org/download/linux/debian/) :
 
         nano /etc/apt/sources.list.d/pgdg.list
 
@@ -119,30 +119,30 @@ On importe la clef public du depot et prépare les MAJ
 On peut maintenant installer postgresql et postgis
 
         apt-get install postgresql-9.3 postgresql-contrib-9.3 postgis
-        
+
 *Configuration du serveur de base de données*
 On doit permettre aux IP du reseau de se connecter :
 
         nano /etc/postgresql/9.3/main/pg_hba.conf
-        
-On ajoute une ligne à la configue : 
+
+On ajoute une ligne à la configue :
 
         # TYPE  DATABASE        USER            ADDRESS                 METHOD
           host    all             all          164.81.168.0/24            md5
-          
+
 Ce qui devrait permettre à toutes les IP 164.81.168.X de se connecter.
 
-Il faut ensuite modifier `/etc/postgresql/9.3/main/postgresql.conf` pour permettre à postgreSQL d'écouter tout les réseau : 
+Il faut ensuite modifier `/etc/postgresql/9.3/main/postgresql.conf` pour permettre à postgreSQL d'écouter tout les réseau :
 
         listen_addresses='*'
 
 Enfin, pour que les modifications soit prisent en compte :
 
         service postgresql restart
-        
+
 #### Configurer postgreSQL et postGIS ####
 
-La marche a suivre est [disponible sur e trac de l'OSGeo](http://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS21UbuntuPGSQL93Apt) : 
+La marche a suivre est [disponible sur e trac de l'OSGeo](http://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS21UbuntuPGSQL93Apt) :
 
 
 
@@ -156,7 +156,7 @@ Il faut télécharger les sources de mapserver qui sont disponible sur [cette pa
 
         wget download.osgeo.org/mapserver/mapserver-6.4.1.tar.gz
 
-On procède ensuite à l'installation 
+On procède ensuite à l'installation
 
         tar -xvzf mapserver-6.4.1.tar.gz #décompression
         cd mapserver-6.4.1  
@@ -176,12 +176,12 @@ Une fois les petits préparatifs effectué, il faut configurer l'environnement
         -DWITH_PYTHON=OFF \
         -DWITH_MSSQL2008=OFF .. >../configure.out.txt
 
-Ce qui permet de produire le makefile il ne reste plus qu'a compiler et installer 
+Ce qui permet de produire le makefile il ne reste plus qu'a compiler et installer
 
         make
         make install
 
-On peut creer un fichier `cgi-bin` dans `/var/www/` 
+On peut creer un fichier `cgi-bin` dans `/var/www/`
 
         mkdir /var/www/cgi-bin
 
@@ -196,7 +196,7 @@ Il faut alors copier le binaire `/opt/bin/mapserv` dans `/var/www/cgi-bin/`
 
 ### Configurer cgi ###
 
-Il faut réorienter la configuration d'apache pour cgi 
+Il faut réorienter la configuration d'apache pour cgi
 
         nano /etc/apache2/sites-available/default
 
@@ -210,7 +210,7 @@ et intégré quelque chose comme ça en remplacant user par l'utilisateur.
                 Allow from all
         </Directory>
 
-Puis passer les site available en enable 
+Puis passer les site available en enable
 
         a2ensite
 
@@ -220,7 +220,32 @@ POur tester que cela fonctionne :
 
 ## Le mapfile ##
 
-## Test Mapserver ##
-Dans un browser :
+Il faut que le fichier soit lisible par [apache](http://httpd.apache.org/)
 
-http://localhost/cgi-bin/mapserv?map=/var/www/html/mapfiles/cadastre/banyuls4326.map&version=1.1.0&layer=acidity-2012&requet=GetMap&template=openLayers
+        chown -R yourname:www-data mydirectory #donne les droits recursifs
+        chmod -R g+s mydirectory #conservera les droits dans ce dossier pour le groupe
+
+
+## Test Mapserver ##
+###Dans un browser : ###
+
+On peut tester un flux *WMS* sur la base de l'exemple :
+          http://localhost/cgi-bin/mapserv?map=/var/www/html/mapfiles/cadastre/banyuls4326.map&version=1.1.0&layer=acidity-2012&requet=GetMap&template=openLayers
+Ce qui à pour effet de produir une carte avec un template ol
+
+Dans le même esprit on peut tester un flux *WFS* sur la base de
+
+          http://164.81.15.10/cgi-bin/mapserv?map=/var/www/ms_monsatR/monastR_wfs.map&SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities
+ce qui à pour effet de produire un flux XML
+
+
+### Dans [Qgis](http://www.qgis.org/fr/site/) ###
+
+[Qgis](http://www.qgis.org/fr/site/) semble une manière particulièrement addapter aux tests
+des mapFiles !
+
+Il vous suffirat de passer l'URL de votre serveur locale ou distant dans les fonctions
+"ajouter une couche WMS" ou "ajouter une couche WFS"selon la manière dont vous avez
+construit le mapfile. Par exemple :
+
+        http://164.81.15.10/cgi-bin/mapserv?map=/var/www/ms_monsatR/monastR_wms.map
