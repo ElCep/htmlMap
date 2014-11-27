@@ -1,0 +1,80 @@
+MAP
+  FONTSET "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf"
+  EXTENT 76752.868797 5610399.337840 285255.654857 5848133.025081 
+  IMAGETYPE "png"
+  NAME "monastR"
+  #SHAPEPATH "data/"
+  SIZE 600 600
+  STATUS ON
+  UNITS METERS
+
+  OUTPUTFORMAT
+    NAME "png"
+    MIMETYPE "image/png"
+    DRIVER "AGG/PNG"
+    EXTENSION "png"
+    IMAGEMODE RGB
+    TRANSPARENT TRUE
+  END # OUTPUTFORMAT
+
+   PROJECTION
+     "+init=epsg:3857"
+   END # PROJECTION
+
+   WEB
+     IMAGEPATH "/tmp/"
+     TEMPPATH "/var/www/tmp/"
+     IMAGEURL "http://164.81.15.10/tmp/"
+     METADATA
+       "wms_onlineresource"	"http://0.0.0.0/cgi-bin/mapserv?map=/var/www/ms_monsatR/monastR_wms.map"
+       "ows_enable_request"	"*"
+       "wms_srs"	"EPSG:3857"
+       "wms_title"	"position des monastR"
+     END # METADATA
+   END # WEB
+   
+   #######################################################################
+   ##  DEFINITION DE LA Symbologie #######################################
+   #######################################################################
+   
+   SYMBOL
+    NAME "circlef"
+    TYPE ellipse
+    FILLED true
+    POINTS
+      10 10
+    END # POINTS
+  END # SYMBOL
+
+   #######################################################################
+   ##  DEFINITION DES LAyers #######################################
+   #######################################################################
+   
+  LAYER
+    NAME "monsatR_mySQL"
+    TYPE POINT
+    STATUS ON
+    CONNECTIONTYPE OGR
+    CONNECTION "MYSQL:monastR,host=0.0.0.0,port=3306,user=fooUSer,password=p455w0rd"
+    DATA "SELECT geom, wkt_geom from villes"
+    METADATA
+      "wms_title" "monastR" ##required
+      "wms_srs"    "EPSG:3857"
+      "wms_extent" "76752.868797 5610399.337840 285255.654857 5848133.025081"
+    END
+    PROJECTION
+      "init=epsg:3857" ##recommended
+    END
+    TRANSPARENCY 50
+    CLASS
+      NAME "monastR francais"
+      STYLE
+	SYMBOL "circlef"
+	SIZE 16
+	COLOR 240 240 240
+	OUTLINECOLOR 199 199 199
+      END #STYLE
+    END   
+  END #LAYER
+
+END # MAP
