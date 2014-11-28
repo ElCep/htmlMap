@@ -15,35 +15,32 @@
 
   </style>
 </head>
-
-
-<style>
-  #popup{width:200px;height:140px;padding:5px;background-color:#ccc;}
-  #popup_content{height:120px;}
-  #popup{display:none;}
-</style>
-
-
-
 <body>
   <h1 align = "center">MapBox avec WFS</h1>
   <div id="map" style="width: 100%; height: 450px"></div>
   <div id="info" class="alert alert-success"> </div>
-  
-  
-  <div id="popup">
-    <div id="popup_content"></div>
-    <button id="popup_close">Fermer</button>
-  </div>
-
-  
   <script>
-  
-  $( document ).ready(function() {
-    $("#popup_close").click(function() {
-      $("#popup").css("display","none");
-    });   
+  //definition du syle
+  var style = new ol.style.Style({
+    fill: new ol.style.Fill({
+      color: 'rgba(255, 255, 255, 0.6)'
+    }),
+    stroke: new ol.style.Stroke({
+      color: '#319FD3',
+      width: 1
+    }),
+    text: new ol.style.Text({
+      font: '12px Calibri,sans-serif',
+      fill: new ol.style.Fill({
+        color: '#000'
+      }),
+      stroke: new ol.style.Stroke({
+        color: '#fff',
+        width: 3
+      })
+    })
   });
+  var styles = [style];
 
 
   var layers = new ol.layer.Tile({
@@ -70,6 +67,10 @@
           vectorSource.addFeatures(blabl);
         }
       });
+    }, 
+    style: function(feature, resolution) {
+      style.getText().setText(resolution < 5000 ? feature.get('FID') : '');
+      return styles;
     }
   });
 
@@ -81,7 +82,6 @@
   var map = new ol.Map({
     layers: [layers, vector],
     target: 'map',
-    //overlays: [overlay],
     //echelle sur la carte
     controls: ol.control.defaults().extend([
       new ol.control.ScaleLine()
@@ -94,39 +94,74 @@
     })
   });
 
+//pour souligner les elements au survole
+  var highlightStyleCache = {};
 
-  
-
-//   map.on('click', function(evt) {
-//     var coordinate = evt.coordinate;
-//     var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
-// 	coordinate, 'EPSG:3857', 'EPSG:4326'));   
-//     $("#popup_content").html('<p>You clicked here:</p><code>' + hdms +
-// 	'</code>');
-//     $("#popup").css("display","block");
-// 
-//   });
-  
-  var displayFeatureInfo = function(pixel) {
-
-  var feature = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-    return feature;
+  var featureOverlay = new ol.FeatureOverlay({
+    map: map,
+    style: function(feature, resolution) {
+      var text = resolution < 5000 ? feature.get('FID') : '';
+      if (!highlightStyleCache[text]) {
+        highlightStyleCache[text] = [new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: '#f00',
+            width: 1
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(255,0,0,0.1)'
+          }),
+          text: new ol.style.Text({
+            font: '12px Calibri,sans-serif',
+            text: text,
+            fill: new ol.style.Fill({
+              color: '#000'
+            }),
+            stroke: new ol.style.Stroke({
+              color: '#f00',
+              width: 3
+            })
+          })
+        })];
+      }
+      return highlightStyleCache[text];
+    }
   });
 
-//   var info = $("#popup_content");
-    if (feature) {
-    alert("pan")
-      $("#popup_content").html(feature.get('FID'));
-    } else {
-     $("#popup_content").html('&nbsp;');
+  var highlight;
+  var displayFeatureInfo = function(pixel) {
+
+    var feature = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+      return feature;
+    });
+
+//     var info = document.getElementById('info');
+//     if (feature) {
+//       info.innerHTML = feature.getId() + ': ' + feature.get('FID');
+//     } else {
+//       info.innerHTML = '&nbsp;';
+//     }
+
+    if (feature !== highlight) {
+      if (highlight) {
+        featureOverlay.removeFeature(highlight);
+      }
+      if (feature) {
+        featureOverlay.addFeature(feature);
+      }
+      highlight = feature;
     }
-    $("#popup").css("display","block");
 
   };
-  
+
+  $(map.getViewport()).on('mousemove', function(evt) {
+    var pixel = map.getEventPixel(evt.originalEvent);
+    displayFeatureInfo(pixel);
+  });
+
   map.on('click', function(evt) {
     displayFeatureInfo(evt.pixel);
   });
+
   </script>
  </body>
 </html>

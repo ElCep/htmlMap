@@ -35,8 +35,8 @@
         success: function (data){ //pour faire des appel
           var format = new ol.format.GeoJSON();
           var blabl = format.readFeatures(data, {
-            featureProjection: 'EPSG:3857',
-            dataProjection: 'EPSG:4326'
+            featureProjection: 'EPSG:3857', //ol3 s'occupre de la reprojection dans la proj de mapbox
+            dataProjection: 'EPSG:4326' //les données arrive en 4326
           }
           );
           console.log(blabl[0].getGeometry().getCoordinates());
