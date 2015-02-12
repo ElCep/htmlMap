@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- tuto suivit : digital geography : http://goo.gl/Vqg0kn  -->
+  <title>sandbox</title>
+  <meta charset="utf-8" />
+  <!-- chagement des librairies depuis le site leaflet et d3.js-->
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.js"></script>
+  <style>
+  /*import css from leaflet, permet d'avoir les icones et
+  les outils de leaflet*/
+  @import url(http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.css);
+  </style>
+</head>
+<body>
+  <h1 align = "center">image non geographique</h1>
+  <div id="image-map" style="width: 100%; height: 450px"></div>
+  <script type="text/javascript">
+    var map = L.map('image-map').setView([0, 0],0);
+
+    // dimensions de l'image
+    var w = 4032,
+        h = 3024;
+
+    // calculer ou sont les angles de l'images dans l'espace
+    var southWest = map.unproject([0, h], map.getMaxZoom());
+    var northEast = map.unproject([w, 0], map.getMaxZoom());
+    var bounds = new L.LatLngBounds(southWest, northEast);
+
+    L.tileLayer('img/map_{x}_{y}.png', {
+      attribution: 'Map data &copy; ???',
+    }).addTo(map);
+
+  </script>
+ </body>
+</html>
