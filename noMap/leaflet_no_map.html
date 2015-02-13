@@ -13,19 +13,59 @@
   @import url(http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.css);
   </style>
 </head>
-<body>
+<body onload="createMap();">
   <h1 align = "center">image non geographique et non tuillé</h1>
   <div align="center"><br>
-    <input type="radio" name="myRadios" onclick="handleClick(this);" value="orig/barbe.jpg"/>
-    <input type="radio" name="myRadios" onclick="handleClick(this);" value="orig/barbe2.jpg",checked />
+    <input type="radio" name="myRadios" onclick="createMap(this);" value="orig/barbe.jpg"/>
+    <input type="radio" name="myRadios" onclick="createMap(this);" value="orig/barbe2.jpg"/>
   </div>
   <div id="image-map" style="width: 100%; height: 450px"></div>
   <script>
 
 
-      var currentValue = "orig/barbe2.jpg";
-      function handleClick(myRadio) {
-          if (map != undefined){map.remove();}
+      //var currentValue = "orig/barbe2.jpg";
+      //var  = document.getElementByName("myRadios");
+      function createMap (myRadios) {
+        if(myRadios == undefined){
+          currentUrl = "orig/barbe.jpg"
+        }else{
+          map.remove();
+          currentUrl = myRadios.value;
+        }
+        var map = L.map('image-map', {
+                    minZoom: 1,
+                    maxZoom: 4,
+                    center: [0, 0],
+                    zoom: 1,
+                    crs: L.CRS.Simple,
+                  });
+
+
+        // dimensions de l'image
+        var w = 4032,
+            h = 3024,
+            url = currentUrl
+
+        // calculer ou sont les angles de l'images dans l'espace
+        var southWest = map.unproject([0, h], map.getMaxZoom()-1);
+        var northEast = map.unproject([w, 0], map.getMaxZoom()-1);
+        var bounds = new L.LatLngBounds(southWest, northEast);
+
+        // add the image overlay,
+        // so that it covers the entire map
+        var myImage = L.imageOverlay(url, bounds);
+        myImage.addTo(map);
+        // tell leaflet that the map is exactly as big as the image
+        map.setMaxBounds(bounds);
+      }
+
+      function destroyMap (){
+        map.remove();
+      }
+
+
+    /*  function handleClick(myRadio) {
+          //map.remove();
           var map = L.map('image-map', {
                       minZoom: 1,
                       maxZoom: 4,
@@ -51,17 +91,7 @@
           myImage.addTo(map);
           // tell leaflet that the map is exactly as big as the image
           map.setMaxBounds(bounds);
-      }
-
-
-/*      if(document.getElementById('Milk').checked) {
-            var url = 'orig/barbe.jpg';
-          }
-      if(document.getElementById('Butter').checked) {
-            var  url = 'orig/barbe2.jpg';
-          }
-*/
-
+      }*/
 
 
 
