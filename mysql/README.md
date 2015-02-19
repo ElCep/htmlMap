@@ -4,13 +4,18 @@ Pense pas bête mySql
 Pour donner l'accès depuis l'exterieur via une IP
 
         # mysql -u root -p
+Donner tous les accès
+
         mysql> GRANT ALL ON fooDatabase.* TO fooUser@'1.2.3.4' IDENTIFIED BY 'my_password';
 
+Ou donner l'accès seulement en lecture
+
+        mysql> GRANT SELECT, SHOW DATABASE ON fooDatabase.* TO fooUser@'1.2.3.4' IDENTIFIED BY 'my_password';
 Pour tester l'accès a distance via mySQl:
 
-        # mysql -u fooUser -p -h 44.55.66.77
+        # mysql -u fooUser -p -h 44.55.66.77 database_name
 
-source : [(http://www.rackspace.com/knowledge_center/article/mysql-connect-to-your-database-remotely)]
+source : http://www.rackspace.com/knowledge_center/article/mysql-connect-to-your-database-remotely
 
 > ATTENTION ; il faudra bien donner les droits à chaque creations de base de données!
 
