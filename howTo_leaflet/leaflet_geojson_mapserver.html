@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- tuto suivit : digital geography : http://goo.gl/Vqg0kn  -->
+  <title>sandbox leaflet</title>
+  <meta charset="utf-8" />
+  <!-- chagement des librairies depuis le site leaflet et d3.js-->
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <!-- Un plugin github pour charger en ajax les données geoJson de mapserver  -->
+  <script src="https://raw.github.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js"></script>
+  <!-- Pour charger des données externet type geojson -->
+  <style>
+  /*import css from leaflet, permet d'avoir les icones et
+  les outils de leaflet*/
+  @import url(http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.css);
+  </style>
+</head>
+<body>
+  <h1 align = "center">chargement d'un geojson</h1>
+  <div id="map" style="width: 100%; height: 450px"></div>
+  <script>
+  
+    ///////////////////////////////////////////////////////////////////////////
+    // Objet Map
+    //////////////////////////////////////////////////////////////////////////
+    // Centre la carte sur les coordoné [] et avec un niveau de zoom
+    var southWest = L.latLng(42.2,-6.59);
+    var northEast = L.latLng(51.8,10.1);
+    bounds = L.latLngBounds(southWest, northEast);
+    
+    var map = L.map('map',{
+		    maxBounds: bounds,
+		    maxZoom: 10,
+		    minZoom: 1
+		    }).setView([47.18,2.37],5);
+				
+    /////////////////////////////////////////////////////////////////////////
+    // Chargement WMS
+    /////////////////////////////////////////////////////////////////////////
+    // chargement d'un WMS OSM depuis toolserver avec le theme noir et blanc
+    var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png',{attribution: 'Unilim flsh'});
+    // chargement d'un autre WMS
+    var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'Unilim flsh'}).addTo(map);
+    var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};L.control.layers(baseLayers);
+    
+    //////////////////////////////////////////////////////////////////////////////:
+    // Ajouter une couche en geoJson
+    ////////////////////////////////////////////////////////////////////////////
+    //préparation de la fonction popup sur la propriété qui va bien
+    function popUp(feature, layer) {
+      layer.bindPopup(feature.properties.nom_usuel);
+    }
+    //ici on va utiliser un plugin de leaflet pour utiliser L.GeoJSON.AJAX 
+    //le plugin est sur github https://github.com/calvinmetcalf/leaflet-ajax
+    var geojsonLayer = new L.GeoJSON.AJAX("http://1.1.1.1/cgi-bin/mapserv?map=/var/www/monasteres/monasteres_wfs.map&SERVICE=WFS&VERSION=1.1.0&REQUEST=getfeature&TYPENAME=monsatR_mySQL&srsname=EPSG:4326&OUTPUTFORMAT=OGRGeoJSON", {onEachFeature:popUp});
+    
+    geojsonLayer.addTo(map);
+    
+    //////////////////////////////////////////////////////////////////////////////:
+    //Les controles
+    ////////////////////////////////////////////////////////////////////////////
+    //controles du fond de carte
+    var baseMaps = {
+	"Grayscale": toolserver,
+	"Stamen": stamen
+    };
+    //controle des points
+    var overlayMaps = {
+	"monasteres": geojsonLayer
+    };
+    
+    L.control.layers(baseMaps,overlayMaps).addTo(map);
+    
+
+  </script>
+ </body>
+</html>

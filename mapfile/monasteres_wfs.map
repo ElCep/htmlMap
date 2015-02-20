@@ -1,0 +1,91 @@
+MAP
+  FONTSET "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf"
+  EXTENT 76752.868797 5610399.337840 285255.654857 5848133.025081
+  IMAGETYPE "png"
+  NAME "monasteres"
+  SHAPEPATH "data/"
+  SIZE 600 600
+  STATUS ON
+  UNITS METERS
+
+  OUTPUTFORMAT
+    NAME "png"
+    MIMETYPE "image/png"
+    DRIVER "AGG/PNG"
+    EXTENSION "png"
+    IMAGEMODE RGB
+    TRANSPARENT TRUE
+  END # OUTPUTFORMAT
+  
+  OUTPUTFORMAT
+    NAME "OGRGeoJSON"
+    DRIVER "OGR/GeoJSON"
+    FORMATOPTION "LCO:WRITE_BBOX=YES"
+    #FORMATOPTION "LCO:COORDINATE_PRECISION=3"
+    FORMATOPTION "STORAGE=stream"
+    MIMETYPE "application/json; subtype=geojson"
+  END
+
+   PROJECTION
+     "+init=epsg:3857"
+   END # PROJECTION
+
+   WEB
+     IMAGEPATH "/tmp/"
+#     TEMPPATH "/var/www/html/tmp/"
+     IMAGEURL "http://1.1.1.1/html/tmp/"
+     METADATA
+	"wfs_title"          "WFS mapserv monsatR" ## REQUIRED
+	"wfs_onlineresource" "http://1.1.1.1/cgi-bin/mapserv?map=/var/www/monasteres/monasteres_wfs.map" ## Recommended
+	"wfs_srs"            "EPSG:4326" #"EPSG:3857 EPSG:4326" ## Recommended
+	"wfs_abstract"       "This text describes my WFS service." ## Recommended
+	"wfs_enable_request" "*"  # necessary
+     END # METADATA
+   END # WEB
+   
+   #######################################################################
+   ##  DEFINITION DE LA Symbologie #######################################
+   #######################################################################
+   
+   SYMBOL
+    NAME "circlef"
+    TYPE ellipse
+    FILLED true
+    POINTS
+      10 10
+    END # POINTS
+  END # SYMBOL
+
+   #######################################################################
+   ##  DEFINITION DES LAyers #######################################
+   #######################################################################
+   
+  LAYER
+    NAME "monsatR_mySQL"
+    TYPE POINT
+    STATUS ON
+    CONNECTIONTYPE OGR
+    CONNECTION "MYSQL:monasteres,host=1.1.1.1,port=3306,user=foo,password=p4ssw0rd"
+    DATA "SELECT * FROM t_geom_points"
+    DUMP TRUE ## REQUIRED
+    
+    
+    METADATA
+      "wfs_title" "monastR" ##required
+      "wfs_srs"    "EPSG:4326" ##REQUIRED
+      "gml_include_items" "all" ## Optional (serves all attributes for layer)
+      "gml_featureid"     "FID" ## REQUIRED
+      "wfs_enable_request" "*"
+      "wfs_getfeature_formatlist" "OGRGeoJSON"
+    END
+    PROJECTION
+      #"init=epsg:3857" ##recommended
+      "init=epsg:4326"
+    END
+    TRANSPARENCY 50
+    CLASS
+      NAME "monastR français"
+    END   
+  END #LAYER
+
+END # MAP
