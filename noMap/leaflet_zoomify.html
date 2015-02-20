@@ -18,12 +18,13 @@
   <div id="image-map" style="width: 100%; height: 450px"></div>
   <script type="text/javascript">
 
-    var map = L.map('image-map').setView(new L.LatLng(0,0), 0);
+    var map = L.map('image-map').setView(new L.LatLng(0,0), 5);
+    //L.tileLayer.zoomify('http://thematicmapping.org/playground/zoomify/books/', {
     L.tileLayer.zoomify('out/', {
       width: 4032,
       height: 3024,
       tolerance: 0.8,
-      tileSize : 256,
+      //tileSize : 500,
       attribution: 'Photo: Bjørn Sandvik'
     }).addTo(map);
 

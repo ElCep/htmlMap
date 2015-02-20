@@ -54,7 +54,7 @@ de mysql pour pouvoir être attaqué par mapserver.
 ### Le dossier noMap ###
 Il contient quelques teste d'utilisation de leaflet pour afficher des images non
 géographique.
-* le [readme](noMap/readme.md) avec des petites notes
+* le [readme](noMap/README.md) avec des petites notes
 * [pyramid.py](noMap/pyramid.py) est un script python qui effectue le tuilage
 des images non géographique. l'idée est de s'abstraire de zoomify (plugin de photoshop)
 * [leaflet_no_map.html](noMap/leaflet_no_map.html) charge une image non tuilé
@@ -66,3 +66,4 @@ des images non géographique. l'idée est de s'abstraire de zoomify (plugin de p
 ## Des ressources en vrac ##
 * un esemble de [wms très chouette](http://homepage.ntlworld.com/keir.clarke/leaflet/leafletlayers.htm) qui peuvent servire
 de fond.
+* un convertisseur universel de système de coord http://twcc.fr/

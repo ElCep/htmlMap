@@ -3,29 +3,35 @@
 
 import os
 from wand.image import Image ##API for imageMagick
-from wand.display import display
+#from wand.display import display
+
+
 
 
 os.chdir("/home/delaye/github/htmlMap/noMap/")
 with Image(filename='orig/barbe.jpg') as img:
     print img.size
     iSize = img.size
-    for z in "1", "2", "3", "4", "5", "6":
-        myfilename = "out/"+z+"/"
-        print myfilename
-        dir = os.path.dirname(myfilename)
-        if not os.path.exists(dir):
-          os.makedirs(dir)
-        with img.clone() as iclone:
-            i = 0
-            wi = 0
-            hi = 0
-            for h in range(0, img.height, 256):
-                for w in range(0, img.width, 256):
-                  w_end = w + 256
-                  h_end = h + 256
-                  with img[w:w_end, h:h_end] as chunk:
-                      chunk.save(filename=myfilename+'tiles_{}_{}_{}.jpg'.format(z,wi,i))
-                  wi += 1
-                  hi += 1
-                i += 1
+    imgW = iSize[0]
+    imgH = iSize[1]
+    #for tsi in range(256,imgW,256):
+     #   ts = imgW - tsi
+     #  z = 1
+    tileSize = 500
+    nbTiles = (imgW/tileSize) * (imgH/tileSize)
+    print nbTiles
+    myfilename = "out/"
+    dir = os.path.dirname(myfilename)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+    row = 1
+    column = 1
+    for i in range(1, nbTiles,1):
+        with img[((column-1)*tileSize):(column*tileSize), ((row-1)*tileSize):(row*tileSize)] as chunk:
+            chunk.save(filename='{}tile_{}_{}.jpg'.format(myfilename,column,row))
+        column += 1
+        print column
+        if(column >= imgW/tileSize):
+            column = 1
+            row += 1
+        #z += 1

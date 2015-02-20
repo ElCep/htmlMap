@@ -24,6 +24,7 @@ sur les données des municipales de Limoges pour le candidat PS.
 * une [doc](https://leanpub.com/leaflet-tips-and-tricks/read) très bien faite avec des exemples
 * un outils en ligne pour avoir des couleurs chouette : [colorBrewer2](http://colorbrewer2.org/)
 * les [bases de mapServer](http://learnosm.org/fr/advanced/wms-service-configuration/) sur le site learnOSM
+* Les [tuiles est OSM](http://switch2osm.org/fr/utilisation-des-tuiles/debuter-avec-leaflet/)
 
 ### pour aller plus loin ###
 
