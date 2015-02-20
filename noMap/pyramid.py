@@ -1,10 +1,8 @@
 ##script pour tuiller des grosses images non geographique
 ##pour utiliser L.TileLayer.Zoomift.js
 
-
-import wand ##API for imageMagick
 import os
-from wand.image import Image
+from wand.image import Image ##API for imageMagick
 from wand.display import display
 
 
@@ -19,7 +17,15 @@ with Image(filename='orig/barbe.jpg') as img:
         if not os.path.exists(dir):
           os.makedirs(dir)
         with img.clone() as iclone:
-          cloneSize = str(int(z)*10)+"%"
-          iclone.transform(resize=cloneSize)
-          iclone.transform("256x256")
-          iclone.save(filename=myfilename+'mona-lisa-'+z+'-{0}.png'.format(z))
+            i = 0
+            wi = 0
+            hi = 0
+            for h in range(0, img.height, 256):
+                for w in range(0, img.width, 256):
+                  w_end = w + 256
+                  h_end = h + 256
+                  with img[w:w_end, h:h_end] as chunk:
+                      chunk.save(filename=myfilename+'tiles_{}_{}_{}.jpg'.format(z,wi,i))
+                  wi += 1
+                  hi += 1
+                i += 1
