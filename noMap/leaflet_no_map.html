@@ -29,7 +29,6 @@
         if(myRadios == undefined){
           currentUrl = "orig/barbe.jpg"
         }else{
-          map.remove();
           currentUrl = myRadios.value;
         }
         var map = L.map('image-map', {
@@ -54,13 +53,43 @@
         // add the image overlay,
         // so that it covers the entire map
         var myImage = L.imageOverlay(url, bounds);
-        myImage.addTo(map);
+        map.addLayer(myImage);
+
+        if(myImage == undefined){
+          var myImage = L.imageOverlay(url, bounds);
+          map.addLayer(myImage);
+        }else{
+          map.removeLayer(myImage)
+          var myImage = L.imageOverlay(url, bounds);
+          map.addLayer(myImage);
+        }
+        //myImage.addTo(map);
         // tell leaflet that the map is exactly as big as the image
         map.setMaxBounds(bounds);
       }
 
-      function destroyMap (){
-        map.remove();
+      function changeLayer(myRadios,map){
+        document.getElementById('image-map').innerHTML = "<div id='map' style='width: 100%; height: 450px'></div>";
+        var map = new L.Map('image-map');
+        currentUrl = myRadios.value;
+        console.log(currentUrl);
+
+        url = currentUrl
+        var southWest = map.unproject([0, h], map.getMaxZoom()-1);
+        var northEast = map.unproject([w, 0], map.getMaxZoom()-1);
+        var bounds = new L.LatLngBounds(southWest, northEast);
+
+        // add the image overlay,
+        // so that it covers the entire map
+        var myImage = L.imageOverlay(url, bounds);
+        myImage.addTo(map);
+
+
+
+        console.log(map);
+        // tell leaflet that the map is exactly as big as the image
+        map.setMaxBounds(bounds);
+
       }
 
 

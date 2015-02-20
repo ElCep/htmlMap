@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- tuto suivit : digital geography : http://goo.gl/Vqg0kn  -->
+  <title>sandbox</title>
+  <meta charset="utf-8" />
+  <!-- chagement des librairies depuis le site leaflet et d3.js-->
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+  <script type="text/javascript" src="L.TileLayer.Zoomify.js"></script>
+  <style>
+  /*import css from leaflet, permet d'avoir les icones et
+  les outils de leaflet*/
+  @import url(http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.css);
+  </style>
+</head>
+<body>
+  <h1 align = "center">image non geographique</h1>
+  <div id="photo" style="width: 100%; height: 450px"></div>
+  <script type="text/javascript">
+
+  var map = L.map('photo').setView(new L.LatLng(0,0), 1);
+
+  L.tileLayer.zoomify('out/all/', {
+      width: 4032,
+      height: 3024,
+      tolerance: 0.8,
+      attribution: 'Photo: Bjørn Sandvik'
+  }).addTo(map);;
+
+  </script>
+ </body>
+</html>
